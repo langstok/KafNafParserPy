@@ -1031,6 +1031,23 @@ class KafNafParser:
         self.add_term(new_term)
         return new_term
 
+
+    def create_chunk(self, head_id, phase, tokens, id=None):
+        new_chunk = Cchunk(type=self.type)
+        if id is None:
+            n = 1 if self.chunk_layer is None else len(self.chunk_layer.idx) + 1
+            id = "c{n}".format(**locals())
+        new_chunk.set_id(id)
+        new_chunk.set_head(head_id)
+        new_chunk.set_phrase(phase)
+        new_span = Cspan()
+        for token in tokens:
+            new_span.add_target_id(token.get_id())
+        new_chunk.set_span(new_span)
+        self.add_chunk(new_chunk)
+        return new_chunk
+
+
     def add_markable(self,markable_obj):
         """
         Adds a markable to the markable layer
